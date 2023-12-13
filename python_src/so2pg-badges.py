@@ -36,7 +36,7 @@ os.chdir(sys.argv[1])
 
 filename = "Badges.xml"
 badges = ElementTree.iterparse(filename) 
-print "COPY Badges (id, userid, name, date, badgeclass, tagbased) FROM stdin;"
+print ("COPY Badges (id, userid, name, date, badgeclass, tagbased) FROM stdin;")
 
 for event, badge in badges:
     if event == "end" and badge.tag == "row":
@@ -52,8 +52,8 @@ for event, badge in badges:
 
         tagbased = badge.attrib["TagBased"]
         
-        print "%i\t%s\t%s\t%s\t%s\t%s" % (id, userid, name.encode(encoding), date, badgeclass, tagbased)
+        print ("%i\t%s\t%s\t%s\t%s\t%s" % (id, userid, name.encode(encoding), date, badgeclass, tagbased))
         badge.clear()
     
-print "\."
+print ("\.")
 
