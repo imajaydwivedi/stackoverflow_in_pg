@@ -32,11 +32,11 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "Tags.xml"
 tags = ElementTree.iterparse(filename) 
-print "COPY tags (id, name, count, excerptpost, wikipost) FROM stdin;"
+print ("COPY tags (id, name, count, excerptpost, wikipost) FROM stdin;")
 for event, tag in tags:
     if event == "end" and tag.tag == "row":
         id = int(tag.attrib["Id"])
@@ -45,16 +45,19 @@ for event, tag in tags:
 
         count = int(tag.attrib["Count"])
         
-        if tag.attrib.has_key("ExcerptPostId"):
-            excerptpost = tag.attrib["ExcerptPostId"]
+        #if tag.attrib.has_key("ExcerptPostId"):
+        if "ExcerptPostId" in tag.attrib:
+            excerptpost = int(tag.attrib["ExcerptPostId"])
         else:
-            excerptpost = "\N"
+            excerptpost = int("-1")
         
-        if tag.attrib.has_key("WikiPostId"):
-            wikipost = tag.attrib["WikiPostId"]
+        #if tag.attrib.has_key("WikiPostId"):
+        if "WikiPostId" in tag.attrib:
+            wikipost = int(tag.attrib["WikiPostId"])
         else:
-            wikipost = "\N"
+            #wikipost = "\n"
+            wikipost = int("-1")
 
-        print "%i\t%s\t%s\t%s\t%s" % (id, name, count, excerptpost, wikipost)
+        print ("%i\t%s\t%d\t%d\t%d" % (id, name, count, excerptpost, wikipost))
         tag.clear()
-print "\."
+print ("\.")

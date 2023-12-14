@@ -32,11 +32,11 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "PostLinks.xml"
 postlinks = ElementTree.iterparse(filename) 
-print "COPY postlinks (id, creation, postid, relatedpostid, linktypeid) FROM stdin;"
+print ("COPY postlinks (id, creation, postid, relatedpostid, linktypeid) FROM stdin;")
 for event, postlink in postlinks:
     if event == "end" and postlink.tag == "row":
         id = int(postlink.attrib["Id"])
@@ -45,16 +45,18 @@ for event, postlink in postlinks:
 
         postid = int(postlink.attrib["PostId"])
         
-        if postlink.attrib.has_key("RelatedPostId"):
+        #if postlink.attrib.has_key("RelatedPostId"):
+        if "RelatedPostId" in postlink.attrib:
             relatedpostid = postlink.attrib["RelatedPostId"]
         else:
-            relatedpostid = "\N"
+            relatedpostid = "\n"
         
-        if postlink.attrib.has_key("LinkTypeId"):
+        if "LinkTypeId" in postlink.attrib:
+        #if postlink.attrib.has_key("LinkTypeId"):
             linktypeid = postlink.attrib["LinkTypeId"]
         else:
-            linktypeid = "\N"
+            linktypeid = "\n"
 
-        print "%i\t%s\t%s\t%s\t%s" % (id, creation, postid, relatedpostid, linktypeid)
+        print ("%i\t%s\t%s\t%s\t%s" % (id, creation, postid, relatedpostid, linktypeid))
         postlink.clear()
-print "\."
+print ("\.")

@@ -12,7 +12,9 @@ On centos, [install postgres on centos](install_pg/install_centos.md)
 Original source: http://www.bortzmeyer.org/stackoverflow-to-postgresql.html
 
 The social network Stackoverflow (https://stackoverflow.com/) regularly publishes a dump of its database under a Creative Commons free licence. We can find dump file here:
+
 Main download link: https://archive.org/download/stackexchange
+
 File download link:
 https://archive.org/download/stackexchange/stackoverflow.com-Badges.7z
 https://archive.org/download/stackexchange/stackoverflow.com-Comments.7z
@@ -41,16 +43,19 @@ Each XML file store a class of Stack Overflow objects:
 
 ## Transform xml file to sql file
 
-The python_src directory contains a python file per xml file to parse
+The python_src directory contains a python file per xml file to parse. Copy these `*.py` files and `*.xml` dump files in same directory.
+> [!NOTE]
+> Following code has been tested with Python 3.11.5 with Postgres 14.
+
 To launch the parser
 ```bash
-python so2pg-<xml_to_parse>.py <where/my/xml/are> > <path_to_result>/<parsed_xml>.sql
+python so2pg-<xml_to_parse>.py <xml_file>.xml > <parsed_xml>.sql
 ```
 If you want test it, in python directory there is a subdirectory named sample_xml.
 ```bash
 #change to directory python_src
 #launch 
-python so2pg-badges.py ./sample_xml > badges.sql
+python so2pg-badges.py sample_xml > badges.sql
 
 #you obtain a sql file ready to load to postgres
 ```
@@ -61,9 +66,9 @@ python so2pg-badges.py ./sample_xml > badges.sql
 # connect to user postgres
 sudo su - postgres
 # create your database
-createdb --encoding=UTF-8 so
-#create database table in database so
-psql -U postgres -d so -f so-create.sql 
+createdb --encoding=UTF-8 StackOverflow
+#create database table in database StackOverflow
+psql -U postgres -d StackOverflow -f so-create.sql
 ```
 All you have to do now is to load the sql files.
 You can load them in the order you want.
@@ -71,12 +76,12 @@ I disable all integrity constraints.
 Move to the directory where the sql files are located and start the loads like this
 
 ```bash
-psql -U postgres -d so -f badges.sql
-psql -U postgres -d so -f comments.sql 
-psql -U postgres -d so -f posthistory.sql 
-psql -U postgres -d so -f postlinks.sql 
-psql -U postgres -d so -f posts.sql 
-psql -U postgres -d so -f tags.sql 
-psql -U postgres -d so -f users.sql 
-psql -U postgres -d so -f votes.sql  
+psql -U postgres -d StackOverflow -f badges.sql
+psql -U postgres -d StackOverflow -f comments.sql 
+psql -U postgres -d StackOverflow -f posthistory.sql 
+psql -U postgres -d StackOverflow -f postlinks.sql 
+psql -U postgres -d StackOverflow -f posts.sql 
+psql -U postgres -d StackOverflow -f tags.sql 
+psql -U postgres -d StackOverflow -f users.sql 
+psql -U postgres -d StackOverflow -f votes.sql  
 ```

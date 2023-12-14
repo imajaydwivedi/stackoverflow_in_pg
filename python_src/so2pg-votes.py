@@ -32,11 +32,11 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "Votes.xml"
 votes = ElementTree.iterparse(filename) 
-print "COPY votes (id, type, postid, creation) FROM stdin;"
+print ("COPY votes (id, type, postid, creation) FROM stdin;")
 for event, vote in votes:
     if event == "end" and vote.tag == "row":
         id = int(vote.attrib["Id"])
@@ -47,6 +47,6 @@ for event, vote in votes:
 
         creation = vote.attrib["CreationDate"]
         
-        print "%i\t%s\t%s\t%s" % (id, type, postid, creation)
+        print ("%i\t%s\t%s\t%s" % (id, type, postid, creation))
         vote.clear()
-print "\."
+print ("\.")

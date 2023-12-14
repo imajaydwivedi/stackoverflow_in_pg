@@ -32,11 +32,11 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "Users.xml"
 users = ElementTree.iterparse(filename) 
-print "COPY users (id, reputation, creation, name, lastaccess, website, location, aboutme, views, upvotes, downvotes, age) FROM stdin;"
+print ("COPY users (id, reputation, creation, name, lastaccess, website, location, aboutme, views, upvotes, downvotes, age) FROM stdin;")
 for event, user in users:
     if event == "end" and user.tag == "row":
         id = int(user.attrib["Id"])
@@ -45,51 +45,60 @@ for event, user in users:
 
         creation = user.attrib["CreationDate"]
 
-        if user.attrib.has_key("DisplayName"): # Yes, some users have no name, for instance 155 :-(
+        #if user.attrib.has_key("DisplayName"): # Yes, some users have no name, for instance 155 :-(
+        if "DisplayName" in user.attrib:
             name = escape(user.attrib["DisplayName"])
         else:
-            name = "\N"
+            name = "\n"
 
-        if user.attrib.has_key("LastAccessDate"): 
+        #if user.attrib.has_key("LastAccessDate"):
+        if "LastAccessDate" in user.attrib:
             lastaccess = escape(user.attrib["LastAccessDate"])
         else:
-            lastaccess = "\N"
+            lastaccess = "\n"
 
-        if user.attrib.has_key("WebsiteUrl"):
+        #if user.attrib.has_key("WebsiteUrl"):
+        if "WebsiteUrl" in user.attrib:
             website = escape(user.attrib["WebsiteUrl"])
         else:
-            website = "\N"
+            website = "\n"
 
-        if user.attrib.has_key("Location"):
+        #if user.attrib.has_key("Location"):
+        if "Location" in user.attrib:
             location = escape(user.attrib["Location"])
         else:
-            location = "\N"
+            location = "\n"
         
-        if user.attrib.has_key("AboutMe"):
+        #if user.attrib.has_key("AboutMe"):
+        if "AboutMe" in user.attrib:
             aboutme = escape(user.attrib["AboutMe"])
         else:
-            aboutme = "\N"
+            aboutme = "\n"
 
-        if user.attrib.has_key("Views"):
-            views = user.attrib["Views"]
+        #if user.attrib.has_key("Views"):
+        if "Views" in user.attrib:
+            views = int(user.attrib["Views"])
         else:
-            views = "\N"
+            views = 0
 
-        if user.attrib.has_key("UpVotes"):
-            upvotes = user.attrib["UpVotes"]
+        #if user.attrib.has_key("UpVotes"):
+        if "UpVotes" in user.attrib:
+            upvotes = int(user.attrib["UpVotes"])
         else:
-            upvotes = "\N"
+            upvotes = 0
 
-        if user.attrib.has_key("DownVotes"):
-            downvotes = user.attrib["DownVotes"]
+        #if user.attrib.has_key("DownVotes"):
+        if "DownVotes" in user.attrib:
+            downvotes = int(user.attrib["DownVotes"])
         else:
-            downvotes = "\N"
+            downvotes = 0
         
-        if user.attrib.has_key("Age"):
-            age = user.attrib["Age"]
+        #if user.attrib.has_key("Age"):
+        if "Age" in user.attrib:
+            age = int(user.attrib["Age"])
         else:
-            age = "\N"
+            age = -1
 
-        print "%i\t%i\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (id, reputation, creation, name.encode(encoding), lastaccess, website.encode(encoding), location.encode(encoding), aboutme.encode(encoding), views, upvotes, downvotes, age)
+        print ("%i\t%i\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (id, reputation, creation, name.encode(encoding), lastaccess, website.encode(encoding), location.encode(encoding), aboutme.encode(encoding), views, upvotes, downvotes, age))
         user.clear()
-print "\."
+print ("\.")

@@ -32,7 +32,7 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "Badges.xml"
 badges = ElementTree.iterparse(filename) 

@@ -32,11 +32,11 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "Comments.xml"
 comments = ElementTree.iterparse(filename) 
-print "COPY Comments (id, postid, score, text, creation, userid) FROM stdin;"
+print ("COPY Comments (id, postid, score, text, creation, userid) FROM stdin;")
 
 for event, comment in comments:
     if event == "end" and comment.tag == "row":
@@ -50,13 +50,13 @@ for event, comment in comments:
 
         creation = comment.attrib["CreationDate"]
 
-        if comment.attrib.has_key("UserId"):
-            userid = comment.attrib["UserId"]
+        if "UserId" in comment.attrib:
+            userid = int(comment.attrib["UserId"])
         else:
-            userid = "\N"
+            userid = -1
 
-        print "%i\t%s\t%s\t%s\t%s\t%s" % (id, postid, score, text.encode(encoding), creation, userid)
+        print ("%i\t%s\t%s\t%s\t%s\t%s" % (id, postid, score, text.encode(encoding), creation, userid))
         comment.clear()
     
-print "\."
+print ("\.")
 

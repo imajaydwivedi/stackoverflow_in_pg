@@ -32,13 +32,13 @@ def tag_parse(str):
 if len(sys.argv) != 2:
     raise Exception("Usage: %s so-files-directory" % sys.argv[0])
 
-os.chdir(sys.argv[1])
+#os.chdir(sys.argv[1])
 
 filename = "PostHistory.xml"
 postHistory = ElementTree.iterparse(filename) 
 tags = {}
 tag_id = 1
-print "COPY posthistory (id, type, postid, revisionguid, creation, userid, userdisplaymame, text) FROM stdin;"
+print ("COPY posthistory (id, type, postid, revisionguid, creation, userid, userdisplaymame, text) FROM stdin;")
 
 for event, post in postHistory:
     if event == "end" and post.tag == "row":
@@ -52,23 +52,26 @@ for event, post in postHistory:
 
         creation = post.attrib["CreationDate"]
 
-        if post.attrib.has_key("UserId"):
-            userid = post.attrib["UserId"]
+        #if post.attrib.has_key("UserId"):
+        if "UserId" in post.attrib:
+            userid = int(post.attrib["UserId"])
         else:
-            userid = "\N"
+            userid = -1
 
-        if post.attrib.has_key("UserDisplayName"):
+        #if post.attrib.has_key("UserDisplayName"):
+        if "UserDisplayName" in post.attrib:
             userdisplaymame = escape(post.attrib["UserDisplayName"])
         else:
-            userdisplaymame = "\N"
+            userdisplaymame = "\n"
 
-        if post.attrib.has_key("Text"):
+        #if post.attrib.has_key("Text"):
+        if "Text" in post.attrib:
             text = escape(post.attrib["Text"])
         else:
-            text = "\N"
+            text = "\n"
 
-        print "%i\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (id, type, postid, revisionguid, creation, userid, userdisplaymame.encode(encoding), text.encode(encoding))
+        print ("%i\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (id, type, postid, revisionguid, creation, userid, userdisplaymame.encode(encoding), text.encode(encoding)))
         post.clear()
     
-print "\."
+print ("\.")
 
