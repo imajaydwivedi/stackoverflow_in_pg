@@ -5,7 +5,11 @@ export PGPASSWORD='<password>'
 pg_dump --help
 
 pg_dump -Fc -h localhost -U postgres DBA -f DBA.dump
-pg_dump -Fc -h localhost -U postgres StackOverflow -f StackOverflow-Backup-20231214.dump -Z 9
+
+cd /stale-storage/Softwares/PostgreSQL/PostgreSQL-Sample-Dbs
+pg_dump -Fc -h localhost -U postgres StackOverflow -f StackOverflow-Backup-20231214.dump -Z 9 -v
+
+
 
 
 # Restore Database
